@@ -16,7 +16,7 @@ import android.content.Context;
 
 public class ContactDB {
 
-	static String FILEPATH = "mincontactlist.txt";
+	static String FILEPATH = "mincontactlist.db";   //用于保存列表的文件名
 	private Context context;
 	private List<ContactInfo> oldContactList = null; // 从文件中读取的上一次程序的联系人列表
 
@@ -34,8 +34,8 @@ public class ContactDB {
 		this.oldContactList = oldContactList;
 	}
 
+	//保存联系人列表到本地机器
 	public void saveContactList(List<ContactInfo> contactList) {
-
 		// StringBuilder contactJsonstr = new StringBuilder();
 		JSONObject jsonObject = new JSONObject();
 		JSONArray contactJsonList = new JSONArray();
@@ -61,6 +61,7 @@ public class ContactDB {
 		writeData(jsonObject.toString());
 	}
 
+	//文件写操作
 	public void writeData(String str) {
 		try {
 			FileOutputStream fOut = context.openFileOutput(FILEPATH,
@@ -74,6 +75,8 @@ public class ContactDB {
 		}
 	}
 
+	
+	//从本地文件中读取联系人
 	public void readData() {
 		try {
 			FileInputStream fIn = context.openFileInput(FILEPATH);

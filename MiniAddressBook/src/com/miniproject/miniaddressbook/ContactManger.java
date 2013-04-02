@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
@@ -11,6 +12,8 @@ import android.util.Log;
 
 public class ContactManger {
 
+	
+	//拼音库集合，用于搜索首字母匹配
 	static String[] pinyin = { "a", "ai", "an", "ang", "ao", "ba", "bai",
 			"ban", "bang", "bao", "bei", "ben", "beng", "bi", "bian", "biao",
 			"bie", "bin", "bing", "bo", "bu", "ca", "cai", "can", "cang",
@@ -89,7 +92,7 @@ public class ContactManger {
 		searchList = new ArrayList<ContactInfo>();
 	}
 
-	// 获取通讯录列表
+	// 从终端数据库中用SQL获取通讯录列表并存入newContactList
 	private void getContactList() {
 		String[] selectField = { Phone.DISPLAY_NAME, Phone.NUMBER,
 				Phone.PHOTO_ID, "sort_key" };
@@ -125,7 +128,8 @@ public class ContactManger {
 		cur.close();
 	}
 
-	// 搜索联系人
+	// 利用模糊匹配从终端数据库中用SQL搜索联系人，进行逻辑排序后存入searchList
+	@SuppressLint("DefaultLocale")
 	public List<ContactInfo> getSearchUser(String condition) {
 		List<ContactInfo> tempList = null;
 		tempList = new ArrayList<ContactInfo>();
@@ -196,6 +200,7 @@ public class ContactManger {
 				searchList.add(contactInfo);
 			}
 		}
+		//按照第一个Key的位置排序
 		sortContactBySortKey(searchList, condition.substring(0, 1));
 
 		// 只包含中文的结果集排序
@@ -206,17 +211,20 @@ public class ContactManger {
 				Log.d("tempSortList", contactInfo.getName());
 			}
 		}
+		//按照第一个Key的位置排序
 		sortContactBySortKey(tempSortList, condition.substring(0, 1));
 		searchList.addAll(tempSortList);
 		return searchList;
 	}
 
-	// 按照sortkey排序联系人
+	// 按照首位sortkey排序联系人
 	private void sortContactBySortKey(List<ContactInfo> contactList,
 			String condition) {
 		quickSort(contactList, 0, contactList.size() - 1, condition);
 	}
 
+	
+	//快速排序算法
 	private void quickSort(List<ContactInfo> sortList, int low, int hight,
 			String condition) {
 		if (low < hight) {
@@ -226,10 +234,9 @@ public class ContactManger {
 		}
 	}
 
+	//以首位为支点进行划分集合
 	private int partition(List<ContactInfo> contactList, int low, int high,
 			String condition) {
-
-		// ContactInfo tmp = contactList.get(low);
 		String name = contactList.get(low).getName();
 		List<String> phone = contactList.get(low).getPhone();
 		String photoId = contactList.get(low).getPhotoId();

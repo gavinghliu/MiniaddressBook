@@ -8,5 +8,5 @@
     <string name="head">通讯录</string>
     <string name="oldfriend">好友</string>
     <string name="newfriend">新好友</string>
-
+	<string name="noresult">无结果</string>
 </resources>

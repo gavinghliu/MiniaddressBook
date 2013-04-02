@@ -38,10 +38,9 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnItemClickListener {
 
-	public static int NORESULT = 20;
 	private ContactDB contactDB = null; // 数据存储
 	private ContactManger contactManger = null; // 内存管理
-	private long exitTime = 0;
+	private long exitTime = 0;					//用于记录按两次退出键的时间间隔	
 	private List<ContactInfo> lastContactList = null; // 显示出来的没有变化的联系人列表
 	private List<ContactInfo> difContactList = null; // 显示出来的改变过的联系人列表
 
@@ -76,19 +75,19 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		layoutSearchBar = (LinearLayout) findViewById(R.id.window);
 		editSearch = (EditText) findViewById(R.id.edit_search);
 		layout = (FrameLayout) findViewById(R.id.oldFriendFrameLayout);
-
 		
 		setSearchEditText();
-		// 首次应用程序不检测新好友
+		// 首次使用应用程序不检测新好友
 		if (contactDB.getOldContactList().size() == 0)
 			contactDB.setOldContactList(contactManger.getNewContactList());
 
+		//对比新获取的联系人列表和从文件中读取的联系人列表
 		remindChange(contactManger.getNewContactList(),
 				contactDB.getOldContactList());
 
 		contactAdapter = new ContactAdapter(MainActivity.this, lastContactList);
 		
-		// 无结果界面
+		// 搜索无结果的UI设置
 		noResultTextView = new TextView(MainActivity.this);
 		noResultTextView.setLayoutParams(new ViewGroup.LayoutParams(
 				ViewGroup.LayoutParams.FILL_PARENT,
@@ -98,7 +97,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		noResultTextView.setTextSize(22);
 		noResultTextView.setText("无结果");
 
-		// 旧好友列表
+		//旧好友列表的UI设置
 		listView = (ListView) findViewById(R.id.oldFriendListView);
 		listView.setAdapter(contactAdapter);
 		listView.setOnItemClickListener(MainActivity.this);

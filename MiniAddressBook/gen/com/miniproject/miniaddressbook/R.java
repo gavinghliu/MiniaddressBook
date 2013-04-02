@@ -72,6 +72,7 @@ public final class R {
         public static final int head=0x7f050004;
         public static final int hello_world=0x7f050002;
         public static final int newfriend=0x7f050006;
+        public static final int noresult=0x7f050007;
         public static final int oldfriend=0x7f050005;
         public static final int search=0x7f050003;
     }
